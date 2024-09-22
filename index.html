@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dayanita</title>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+        background-color: #ffe6e6;
+      }
+      .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+        width: 90%;
+        max-width: 400px;
+      }
+      h1 {
+        color: #ff4d4d;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      #btnRegalar,
+      #btnVolver,
+      #btnSiguiente {
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: 10px;
+      }
+      #btnRegalar:hover,
+      #btnVolver:hover,
+      #btnSiguiente:hover {
+        background-color: #ff3333;
+      }
+      #progressBar {
+        width: 100%;
+        background-color: #f3f3f3;
+        border-radius: 13px;
+        padding: 3px;
+        margin-top: 20px;
+        display: none;
+      }
+      #progressBar > div {
+        background-color: #ff4d4d;
+        width: 0%;
+        height: 20px;
+        border-radius: 10px;
+        transition: width 0.5s;
+      }
+      .card {
+        width: 100%;
+        max-width: 300px;
+        height: 200px;
+        position: relative;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+        margin: 0 auto;
+      }
+      .card-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+      }
+      .card-front {
+        background-color: #ffffff;
+      }
+      .card-back {
+        background-color: #ffcccc;
+        transform: rotateY(180deg);
+      }
+      .card-back p {
+        padding: 10px;
+        margin: 0;
+      }
+      .flower {
+        position: absolute;
+        z-index: 1;
+        pointer-events: none;
+      }
+      #btnVolver,
+      #btnSiguiente {
+        display: none;
+      }
+      #imagen {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 0.5rem;
+        }
+        h1 {
+          font-size: 1.2rem;
+        }
+        .card {
+          height: 150px;
+        }
+        #btnRegalar,
+        #btnVolver,
+        #btnSiguiente {
+          font-size: 0.9rem;
+          padding: 8px 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>¡Feliz Dia de la Amistad, amor que tengo por ti, etc.</h1>
+      <div class="card">
+        <div class="card-face card-front">
+          <img
+            id="imagen"
+            src="/imgs/monitoFlorRoja.png"
+            alt="Amigos compartiendo flores"
+          />
+        </div>
+        <div class="card-face card-back">
+          <p id="mensaje"></p>
+        </div>
+      </div>
+      <button id="btnRegalar">Acetar flor</button>
+      <button id="btnVolver">Volver</button>
+      <button id="btnSiguiente">Siguiente mensaje</button>
+      <div id="progressBar"><div></div></div>
+    </div>
+
+    <script>
+      const btnRegalar = document.getElementById("btnRegalar");
+      const btnVolver = document.getElementById("btnVolver");
+      const btnSiguiente = document.getElementById("btnSiguiente");
+      const progressBar = document.getElementById("progressBar");
+      const progressBarInner = progressBar.querySelector("div");
+      const mensaje = document.getElementById("mensaje");
+      const card = document.querySelector(".card");
+
+      const mensajes = [
+        "La primera vez que hablamos por mensajes, primera vez que salimos al cine, a partir de ahi son y fueron momentos de felicidad para mi",
+        "Sin importar lo que ocurra, nunca te olvidare. Jamas te borrare de mi memoria RAM.",
+        "Si en algun momento te hice sentir mal, lo siento de verdad, lo hice sin intencion.",
+        "Te hackee, caiste!!",
+        "Es broma lo del hackeo 😂",
+      ];
+
+      let mensajeActual = 0;
+
+      btnRegalar.addEventListener("click", () => {
+        btnRegalar.style.display = "none";
+        progressBar.style.display = "block";
+        mensaje.textContent = "Preparando tu regalo de amistad...";
+
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += 1;
+          progressBarInner.style.width = `${progress}%`;
+          if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+              progressBar.style.display = "none";
+              mensaje.textContent = mensajes[mensajeActual];
+              card.style.transform = "rotateY(180deg)";
+              btnVolver.style.display = "inline-block";
+              btnSiguiente.style.display = "inline-block";
+            }, 500);
+          }
+        }, 50);
+      });
+
+      btnVolver.addEventListener("click", () => {
+        card.style.transform = "rotateY(0deg)";
+        btnVolver.style.display = "none";
+        btnSiguiente.style.display = "none";
+        btnRegalar.style.display = "inline-block";
+        mensajeActual = 0;
+      });
+
+      btnSiguiente.addEventListener("click", () => {
+        mensajeActual = (mensajeActual + 1) % mensajes.length;
+        mensaje.textContent = mensajes[mensajeActual];
+      });
+
+      function getRandomColor() {
+        const colors = [
+          "#FF69B4",
+          "#FFD700",
+          "#FFA500",
+          "#FF6347",
+          "#7FFFD4",
+          "#DDA0DD",
+          "#20B2AA",
+        ];
+        return colors[Math.floor(Math.random() * colors.length)];
+      }
+
+      function createFlower() {
+        const flower = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "svg"
+        );
+        flower.setAttribute("width", "30");
+        flower.setAttribute("height", "30");
+        flower.setAttribute("viewBox", "0 0 100 100");
+
+        const color1 = getRandomColor();
+        const color2 = getRandomColor();
+        const color3 = getRandomColor();
+
+        flower.innerHTML = `
+                <path d="M50 0 C20 20 20 50 50 70 C80 50 80 20 50 0" fill="${color1}" />
+                <path d="M50 0 C80 20 80 50 50 70 C20 50 20 20 50 0" fill="${color2}" />
+                <circle cx="50" cy="50" r="10" fill="${color3}" />
+            `;
+        flower.classList.add("flower");
+        return flower;
+      }
+
+      function animateFlower(flower) {
+        const startPositionX = Math.random() * window.innerWidth;
+        const endPositionY = window.innerHeight + 50;
+        const animationDuration = 5000 + Math.random() * 5000;
+
+        flower.style.left = `${startPositionX}px`;
+        flower.style.top = "-50px";
+
+        const startTime = Date.now();
+
+        function fall() {
+          const elapsedTime = Date.now() - startTime;
+          const progress = elapsedTime / animationDuration;
+
+          if (progress < 1) {
+            flower.style.top = `${progress * endPositionY}px`;
+            flower.style.transform = `rotate(${progress * 360}deg)`;
+            requestAnimationFrame(fall);
+          } else {
+            flower.remove();
+            createAndAnimateFlower();
+          }
+        }
+
+        requestAnimationFrame(fall);
+      }
+
+      function createAndAnimateFlower() {
+        const flower = createFlower();
+        document.body.appendChild(flower);
+        animateFlower(flower);
+      }
+
+      for (let i = 0; i < 20; i++) {
+        setTimeout(createAndAnimateFlower, Math.random() * 3000);
+      }
+    </script>
+  </body>
+</html>
